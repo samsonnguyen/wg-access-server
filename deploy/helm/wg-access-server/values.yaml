@@ -8,6 +8,10 @@ web:
   service:
     type: ClusterIP
 
+secret:
+  keyRef:
+    name: wg-access-server
+
 wireguard:
   config:
     privateKey: ""
