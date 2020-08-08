@@ -38,25 +38,25 @@ spec:
               containerPort: 51820
               protocol: UDP
           env:
-            {{- if .Values.wireguard.config.privateKey }}
+            {{- if or .Values.wireguard.config.privatekey .Values.secret.keyRef.name }}
             - name: WIREGUARD_PRIVATE_KEY
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
+                  name: "{{ .Values.secret.keyRef.name | default $fullName }}"
                   key: privateKey
             {{- end }}
-            {{- if .Values.web.config.adminUsername }}
+            {{- if or .Values.web.config.adminUsername .Values.secret.keyRef.name }}
             - name: ADMIN_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
+                  name: "{{ .Values.secret.keyRef.name | default $fullName }}"
                   key: adminUsername
             {{- end}}
-            {{- if .Values.web.config.adminPassword }}
+            {{- if or .Values.web.config.adminPassword .Values.secret.keyRef.name }}
             - name: ADMIN_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ $fullName }}"
+                  name: "{{ .Values.secret.keyRef.name | default $fullName }}"
                   key: adminPassword
             {{- end}}
           volumeMounts:
