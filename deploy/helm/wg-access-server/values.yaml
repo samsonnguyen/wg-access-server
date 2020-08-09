@@ -15,6 +15,7 @@ secret:
 wireguard:
   config:
     privateKey: ""
+    nat: true
   service:
     type: ClusterIP
 

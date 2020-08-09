@@ -23,18 +23,19 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      {{- if .Values.wireguard.config.nat }}
+      securityContext:    
+        sysctls:
+          - name: net.ipv4.ip_forward
+            value: "1"
+          - name: net.ipv6.conf.all.forwarding
+            value: "1"
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             capabilities:
               add: ['NET_ADMIN']
-            {{- if .Values.wireguard.config.nat }}
-            sysctls:
-              - name: net.ipv4.ip_forward
-                value: "1"
-              - name: net.ipv6.conf.all.forwarding
-                value: "1"
-            {{- end }}
           image: "{{ .Values.image.repository }}:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
